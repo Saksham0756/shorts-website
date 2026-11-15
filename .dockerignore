@@ -1,0 +1,4 @@
+.env
+cookies/
+jobs/
+__pycache__/

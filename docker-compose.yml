@@ -1,0 +1,23 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - WHISPER_MODEL=${WHISPER_MODEL:-base}
+      - YTDLP_COOKIES=/cookies/cookies.txt
+    volumes:
+      - jobs:/app/jobs
+      - ./cookies:/cookies:ro
+      - whisper:/root/.cache
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+    depends_on: [app]
+volumes: {jobs: {}, whisper: {}, caddy_data: {}}
